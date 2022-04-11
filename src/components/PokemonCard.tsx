@@ -1,11 +1,18 @@
-import {memo, useState} from "react";
-import {PokemonBasic, PokemonDetails, Type} from "../types";
-import {GiCrossedSwords, GiShield, GiShieldOpposition, GiSwordWound, GiWalkingBoot, GiWaterDrop,} from "react-icons/gi";
-import {Spinner} from "./Spinner";
-import {AiFillCloseCircle, AiFillHeart, AiOutlineHeart} from "react-icons/ai";
-import {useRecoilState} from "recoil";
-import {favoritePokemonList} from "../atoms/favoritePokemonList";
-import {fetchPokemonDetails, pokemonIcons} from "../service";
+import { memo, useState } from "react";
+import { PokemonBasic, PokemonDetails, Type } from "../types";
+import {
+  GiCrossedSwords,
+  GiShield,
+  GiShieldOpposition,
+  GiSwordWound,
+  GiWalkingBoot,
+  GiWaterDrop,
+} from "react-icons/gi";
+import { Spinner } from "./Spinner";
+import { AiFillCloseCircle, AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { useRecoilState } from "recoil";
+import { favoritePokemonList } from "../atoms/favoritePokemonList";
+import { fetchPokemonDetails, pokemonIcons } from "../service";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   pokemon: PokemonBasic;
@@ -24,7 +31,7 @@ const spriteOfficialBaseUrl =
  * @param url - Pokemon url
  *
  */
-const PokemonCard = ({pokemon: {id, name, url}}: Props): JSX.Element => {
+const PokemonCard = ({ pokemon: { id, name, url } }: Props): JSX.Element => {
   const [details, setDetails] = useState<PokemonDetails>();
   const [loading, setLoading] = useState(true);
   const [showDetails, setShowDetails] = useState(false);
@@ -50,7 +57,8 @@ const PokemonCard = ({pokemon: {id, name, url}}: Props): JSX.Element => {
   const isFavorite = favoritePokemons.includes(id);
 
   const addRemoveFavorites = () => {
-    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    const favorites: number[] =
+      JSON.parse(localStorage.getItem("favorites")!) || [];
     if (favorites.includes(id)) {
       const newFavorites = favorites.filter((f) => f !== id);
       localStorage.setItem("favorites", JSON.stringify(newFavorites));
@@ -71,12 +79,13 @@ const PokemonCard = ({pokemon: {id, name, url}}: Props): JSX.Element => {
     if (!types || types.length === 0) return null;
 
     const typeName = types[0].type.name;
-    const typeIcon = pokemonIcons[typeName];
+    const typeIcon = pokemonIcons.find((icon) => icon.name === typeName);
+
     return (
       <img
         className={"w-24 h-24"}
         title={typeName}
-        src={typeIcon.icon}
+        src={typeIcon?.icon}
         alt={typeName}
       />
     );
@@ -92,8 +101,7 @@ const PokemonCard = ({pokemon: {id, name, url}}: Props): JSX.Element => {
         />
         <h2 className={"mt-6 text-3xl"}>{name}</h2>
         {isFavorite && (
-          <AiFillHeart className={"text-red-500 mx-auto mt-4"}
-                       size={48} />
+          <AiFillHeart className={"text-red-500 mx-auto mt-4"} size={48} />
         )}
       </div>
     );
@@ -127,7 +135,7 @@ const PokemonCard = ({pokemon: {id, name, url}}: Props): JSX.Element => {
             <span className={"font-bold"}>
               Evolves from {details?.evolvesFrom || "unknown"}
             </span>
-            <span>{details?.generation}</span>
+            <span>{details?.generation || "unknown"}</span>
           </div>
           <div className={"flex justify-between p-2"}>
             <div className={"flex justify-center items-center gap-1"}>
@@ -159,12 +167,15 @@ const PokemonCard = ({pokemon: {id, name, url}}: Props): JSX.Element => {
                   "w-[32px] h-[32px] rounded-full  flex justify-center items-center"
                 }
               >
-                {details && (getPokemonIcon(details?.types) || <GiWaterDrop size={24} title={"Placeholder"} />)}
+                {details &&
+                  (getPokemonIcon(details?.types) || (
+                    <GiWaterDrop size={24} title={"Placeholder"} />
+                  ))}
               </div>
             </div>
           </div>
           <div
-            style={{backgroundImage: `url("/low-poly-gradient.svg")`}}
+            style={{ backgroundImage: `url("/low-poly-gradient.svg")` }}
             className={
               "w-full h-[200px] px-4 border-4 border-amber-400 dark:border-purple-800 relative"
             }
@@ -184,8 +195,8 @@ const PokemonCard = ({pokemon: {id, name, url}}: Props): JSX.Element => {
               "mt-1 text-center font-extrabold p-1 bg-yellow-400 dark:bg-purple-800 whitespace-nowrap overflow-hidden"
             }
           >
-            {details?.genus} Length {details?.height * 10}cm, Weight{" "}
-            {details?.weight / 10}kg
+            {details?.genus} Length {(details?.height || 0) * 10}cm , Weight{" "}
+            {(details?.weight || 0) / 10}kg
           </p>
           <div
             className={

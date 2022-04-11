@@ -4,6 +4,11 @@ export interface PokemonBasic {
   url: string;
 }
 
+export type PokemonIcon = {
+  name: string;
+  icon: string;
+};
+
 export type PokemonDetails = {
   height: number;
   weight: number;

@@ -7,21 +7,24 @@ type Props = {
 };
 declare const window: any;
 
-
 /**
  * Smooth scroll up button
  *
  * @param yOffset - The Y offset of the window on which the button will be shown
  * @param smoothingFactor - The smoothing factor of the scrolling animation
  */
-const ScrollUp = ({ yOffset = 1200, smoothingFactor = 20 }: Props): JSX.Element => {
+const ScrollUp = ({
+  yOffset = 1200,
+  smoothingFactor = 20,
+}: Props): JSX.Element | null => {
   const [showButton, setShowButton] = useState<boolean>();
 
   useEffect(() => {
     let lastScroll = Number.MAX_SAFE_INTEGER;
     setShowButton(window.scrollY > yOffset);
     window.smoothScroll = () => {
-      let currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      let currentScroll =
+        document.documentElement.scrollTop || document.body.scrollTop;
 
       if (lastScroll < currentScroll) {
         lastScroll = Number.MAX_SAFE_INTEGER;
