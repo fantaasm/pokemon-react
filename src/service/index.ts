@@ -11,22 +11,20 @@ const apiBase = "https://pokeapi.co/api/v2";
  * @returns {Promise<PokemonBasic[]>} - Promise of an array of pokemons
  */
 export const fetchPokemons = async (offset: number = 0, limit: number = -1) => {
-  const urlParams = new URLSearchParams({ offset, limit } as unknown as
-    | string[][]
-    | string);
+  const urlParams = new URLSearchParams({ offset, limit } as unknown as string[][] | string);
   const response = await fetch(`${apiBase}/pokemon?${urlParams}`);
 
   if (response.ok) {
     const basePokemons = await response.json();
 
     return basePokemons.results.map((pokemon: any) => {
-      const id = pokemon.url.match(/\/(\d+)\/$/)[1]; // Extract id from url for back cover sprite
-      const name = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1); // Capitalize first letter of name
+      const id = pokemon.url.match(/\/(\d+)\/$/)[1];
+      const name = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
       return { id, name, url: pokemon.url };
     });
   }
 
-  console.log("fetchPokemons - Something went wrong=" + response.status);
+  alert("Something went wrong=" + response.status);
   return null;
 };
 
@@ -37,24 +35,18 @@ export const fetchPokemons = async (offset: number = 0, limit: number = -1) => {
  * @returns {Promise<PokemonDetails>} - Promise of a pokemon details
  * @throws {Error} - If url is invalid
  */
-export const fetchPokemonDetails = async (
-  url: string
-): Promise<PokemonDetails | null> => {
+export const fetchPokemonDetails = async (url: string): Promise<PokemonDetails | null> => {
   if (!url) throw new Error("fetchPokemonDetails - url is required");
 
-  // 1. Fetch the big details and destruct the data
-  const detailsResponse = await fetch(url); // 8.5kb br, 214kb uncompressed
+  const detailsResponse = await fetch(url);
   if (!detailsResponse.ok) return null;
 
-  const { height, weight, types, stats, species } =
-    await detailsResponse.json();
+  const { height, weight, types, stats, species } = await detailsResponse.json();
 
-  // 2. Use the data from big details to fetch the small details(species)
   const speciesResponse = await fetch(species.url);
   if (!speciesResponse.ok) return null;
   const speciesData = await speciesResponse.json();
 
-  // 3. Return the merged data
   return {
     height,
     weight,
@@ -62,9 +54,7 @@ export const fetchPokemonDetails = async (
     stats,
     species,
     evolvesFrom: speciesData.evolves_from_species?.name,
-    flavorText: speciesData.flavor_text_entries.find(
-      (f: any) => f.language.name === "en"
-    ).flavor_text,
+    flavorText: speciesData.flavor_text_entries.find((f: any) => f.language.name === "en").flavor_text,
     generation: speciesData.generation.name,
     color: speciesData.color.name,
     genus: speciesData.genera.find((g: any) => g.language.name === "en").genus,

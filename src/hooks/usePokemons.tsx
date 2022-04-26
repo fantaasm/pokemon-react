@@ -9,7 +9,7 @@ type InitialValues = {
   limit: number;
 };
 
-const defaultStepSize = 21; // Increments of 3 for grid size
+const defaultStepSize = 20;
 
 /**
  * Hook to fetch and process pokemons from API
@@ -19,25 +19,20 @@ const defaultStepSize = 21; // Increments of 3 for grid size
  * @returns getPokemons - function to fetch pokemons on active page or from search results
  * @returns getNextPage - function to fetch next page of pokemons
  */
-export const usePokemons = ({
-  stepSize = defaultStepSize,
-  limit = defaultStepSize,
-}: InitialValues) => {
-  const [page, setPage] = useState(1); // there is pagination built in api but... too late now
+export const usePokemons = ({ stepSize = defaultStepSize, limit = defaultStepSize }: InitialValues) => {
+  const [page, setPage] = useState(1);
   const [localPokemons, setLocalPokemons] = useState<PokemonBasic[]>([]);
 
-  // filtering pokemons by name globally
   const [globalPokemons, setGlobalPokemons] = useState<PokemonBasic[]>([]);
   const [searchInput, setSearchInput] = useRecoilState(searchInputField);
 
-  console.log("AAAAAAAA")
   useEffect(() => {
-    getNextPage(); // get first page on load
+    getNextPage();
   }, []);
 
   useEffect(() => {
     if (globalPokemons.length > 0 || searchInput.length === 0) return;
-    getAllPokemons(); // pull the big list only when user wants to search something
+    getAllPokemons();
   }, [searchInput]);
 
   /**
@@ -71,9 +66,7 @@ export const usePokemons = ({
   const getPokemons = () => {
     if (globalPokemons.length > 0 && searchInput.length > 1) {
       return globalPokemons
-        .filter((pokemon) =>
-          pokemon.name.toLowerCase().includes(searchInput.toLowerCase())
-        )
+        .filter((pokemon) => pokemon.name.toLowerCase().includes(searchInput.toLowerCase()))
         .slice(0, stepSize);
     }
     return localPokemons;

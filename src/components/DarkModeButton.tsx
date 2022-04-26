@@ -13,7 +13,6 @@ const DarkModeButton = (): JSX.Element => {
     }
   }, []);
 
-  // update local storage
   const updateTheme = (): void => {
     const currentTheme = localStorage.getItem("theme");
     if (currentTheme === "light") {

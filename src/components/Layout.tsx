@@ -6,8 +6,6 @@ type Props = {
   children: ReactNode;
 };
 
-// const DynamicScrollButton = React.lazy(() => import("./ScrollUp"));
-
 /**
  * Wrapping component for the layout of the app.
  *

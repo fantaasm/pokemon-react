@@ -18,9 +18,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   pokemon: PokemonBasic;
 }
 
-// Sprite base urls
-const spriteBaseUrl =
-  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/";
+const spriteBaseUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/";
 const spriteOfficialBaseUrl =
   "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/";
 
@@ -35,8 +33,7 @@ const PokemonCard = ({ pokemon: { id, name, url } }: Props): JSX.Element => {
   const [details, setDetails] = useState<PokemonDetails>();
   const [loading, setLoading] = useState(true);
   const [showDetails, setShowDetails] = useState(false);
-  const [favoritePokemons, setFavoritePokemons] =
-    useRecoilState(favoritePokemonList);
+  const [favoritePokemons, setFavoritePokemons] = useRecoilState(favoritePokemonList);
 
   if (!url) throw new Error("slug is required");
 
@@ -57,8 +54,7 @@ const PokemonCard = ({ pokemon: { id, name, url } }: Props): JSX.Element => {
   const isFavorite = favoritePokemons.includes(id);
 
   const addRemoveFavorites = () => {
-    const favorites: number[] =
-      JSON.parse(localStorage.getItem("favorites")!) || [];
+    const favorites: number[] = JSON.parse(localStorage.getItem("favorites")!) || [];
     if (favorites.includes(id)) {
       const newFavorites = favorites.filter((f) => f !== id);
       localStorage.setItem("favorites", JSON.stringify(newFavorites));
@@ -81,28 +77,15 @@ const PokemonCard = ({ pokemon: { id, name, url } }: Props): JSX.Element => {
     const typeName = types[0].type.name;
     const typeIcon = pokemonIcons.find((icon) => icon.name === typeName);
 
-    return (
-      <img
-        className={"w-24 h-24"}
-        title={typeName}
-        src={typeIcon?.icon}
-        alt={typeName}
-      />
-    );
+    return <img className={"w-24 h-24"} title={typeName} src={typeIcon?.icon} alt={typeName} />;
   };
 
   const renderBackSide = () => {
     return (
       <div className={"h-full bg-yellow-400 dark:bg-gray-800 text-center"}>
-        <img
-          className={"w-[328px] h-[328px]"}
-          src={spriteBaseUrl + id + ".png"}
-          alt={"pokemon"}
-        />
+        <img className={"w-[328px] h-[328px]"} src={spriteBaseUrl + id + ".png"} alt={"pokemon"} />
         <h2 className={"mt-6 text-3xl"}>{name}</h2>
-        {isFavorite && (
-          <AiFillHeart className={"text-red-500 mx-auto mt-4"} size={48} />
-        )}
+        {isFavorite && <AiFillHeart className={"text-red-500 mx-auto mt-4"} size={48} />}
       </div>
     );
   };
@@ -111,18 +94,12 @@ const PokemonCard = ({ pokemon: { id, name, url } }: Props): JSX.Element => {
     return (
       <>
         {(loading || !details) && (
-          <div
-            className={
-              "absolute top-0 left-0 w-full h-full z-40 backdrop-blur-sm"
-            }
-          >
+          <div className={"absolute top-0 left-0 w-full h-full z-40 backdrop-blur-sm"}>
             <Spinner />
           </div>
         )}
 
-        <div
-          className={`container flex flex-col p-2 bg-red-200 dark:bg-gray-800 h-full relative`}
-        >
+        <div className={`container flex flex-col p-2 bg-red-200 dark:bg-gray-800 h-full relative`}>
           <div className={"absolute top-0 right-0 -mr-6 -mt-6"}>
             <AiFillCloseCircle
               className={"text-red-500 cursor-pointer"}
@@ -132,53 +109,30 @@ const PokemonCard = ({ pokemon: { id, name, url } }: Props): JSX.Element => {
           </div>
 
           <div className={"flex justify-around border-b border-yellow-500"}>
-            <span className={"font-bold"}>
-              Evolves from {details?.evolvesFrom || "unknown"}
-            </span>
+            <span className={"font-bold"}>Evolves from {details?.evolvesFrom || "unknown"}</span>
             <span>{details?.generation || "unknown"}</span>
           </div>
           <div className={"flex justify-between p-2"}>
             <div className={"flex justify-center items-center gap-1"}>
               <h2 className={"font-black text-lg"}>{name} </h2>
               {isFavorite ? (
-                <AiFillHeart
-                  className={"text-red-500 cursor-pointer"}
-                  size={32}
-                  onClick={addRemoveFavorites}
-                />
+                <AiFillHeart className={"text-red-500 cursor-pointer"} size={32} onClick={addRemoveFavorites} />
               ) : (
-                <AiOutlineHeart
-                  className={"text-red-500 cursor-pointer"}
-                  size={32}
-                  onClick={addRemoveFavorites}
-                />
+                <AiOutlineHeart className={"text-red-500 cursor-pointer"} size={32} onClick={addRemoveFavorites} />
               )}
             </div>
             <div className={"flex gap-2"}>
-              <h3
-                className={
-                  "font-bold text-lg text-[#790202] dark:text-[#fea4a4]"
-                }
-              >
+              <h3 className={"font-bold text-lg text-[#790202] dark:text-[#fea4a4]"}>
                 {details?.stats[0].base_stat} HP
               </h3>
-              <div
-                className={
-                  "w-[32px] h-[32px] rounded-full  flex justify-center items-center"
-                }
-              >
-                {details &&
-                  (getPokemonIcon(details?.types) || (
-                    <GiWaterDrop size={24} title={"Placeholder"} />
-                  ))}
+              <div className={"w-[32px] h-[32px] rounded-full  flex justify-center items-center"}>
+                {details && (getPokemonIcon(details?.types) || <GiWaterDrop size={24} title={"Placeholder"} />)}
               </div>
             </div>
           </div>
           <div
             style={{ backgroundImage: `url("/low-poly-gradient.svg")` }}
-            className={
-              "w-full h-[200px] px-4 border-4 border-amber-400 dark:border-purple-800 relative"
-            }
+            className={"w-full h-[200px] px-4 border-4 border-amber-400 dark:border-purple-800 relative"}
           >
             <img
               title={name}
@@ -195,8 +149,7 @@ const PokemonCard = ({ pokemon: { id, name, url } }: Props): JSX.Element => {
               "mt-1 text-center font-extrabold p-1 bg-yellow-400 dark:bg-purple-800 whitespace-nowrap overflow-hidden"
             }
           >
-            {details?.genus} Length {(details?.height || 0) * 10}cm , Weight{" "}
-            {(details?.weight || 0) / 10}kg
+            {details?.genus} Length {(details?.height || 0) * 10}cm , Weight {(details?.weight || 0) / 10}kg
           </p>
           <div
             className={
@@ -204,34 +157,16 @@ const PokemonCard = ({ pokemon: { id, name, url } }: Props): JSX.Element => {
             }
           >
             <div>
-              <GiSwordWound
-                size={32}
-                className={"text-[#800000] dark:text-[#fea4a4]"}
-                title={"Attack"}
-              />
-              <span className={"text-lg"}>
-                {details?.stats[1].base_stat || "0"}
-              </span>
+              <GiSwordWound size={32} className={"text-[#800000] dark:text-[#fea4a4]"} title={"Attack"} />
+              <span className={"text-lg"}>{details?.stats[1].base_stat || "0"}</span>
             </div>
             <div>
-              <GiCrossedSwords
-                size={32}
-                className={"text-[#800000] dark:text-[#fea4a4]"}
-                title={"Special Attack"}
-              />
-              <span className={"text-lg"}>
-                {details?.stats[3].base_stat || "0"}
-              </span>
+              <GiCrossedSwords size={32} className={"text-[#800000] dark:text-[#fea4a4]"} title={"Special Attack"} />
+              <span className={"text-lg"}>{details?.stats[3].base_stat || "0"}</span>
             </div>
             <div>
-              <GiShield
-                size={32}
-                className={"text-[#0808c9] dark:text-[#0be0d2]"}
-                title={"Defense"}
-              />
-              <span className={"text-lg"}>
-                {details?.stats[2].base_stat || "0"}
-              </span>
+              <GiShield size={32} className={"text-[#0808c9] dark:text-[#0be0d2]"} title={"Defense"} />
+              <span className={"text-lg"}>{details?.stats[2].base_stat || "0"}</span>
             </div>
             <div>
               <GiShieldOpposition
@@ -239,28 +174,14 @@ const PokemonCard = ({ pokemon: { id, name, url } }: Props): JSX.Element => {
                 className={"text-[#0808c9] dark:text-[#0be0d2]"}
                 title={"Special Defense"}
               />
-              <span className={"text-lg"}>
-                {details?.stats[4].base_stat || "0"}
-              </span>
+              <span className={"text-lg"}>{details?.stats[4].base_stat || "0"}</span>
             </div>
             <div>
-              <GiWalkingBoot
-                size={32}
-                className={"text-white-100"}
-                title={"Speed"}
-              />
-              <span className={"text-lg"}>
-                {details?.stats[5].base_stat || "0"}
-              </span>
+              <GiWalkingBoot size={32} className={"text-white-100"} title={"Speed"} />
+              <span className={"text-lg"}>{details?.stats[5].base_stat || "0"}</span>
             </div>
           </div>
-          <p
-            className={
-              "p-1 mt-1 border border-slate-500 max-h-[42px] overflow-y-auto"
-            }
-          >
-            {details?.flavorText}
-          </p>
+          <p className={"p-1 mt-1 border border-slate-500 max-h-[42px] overflow-y-auto"}>{details?.flavorText}</p>
         </div>
       </>
     );
